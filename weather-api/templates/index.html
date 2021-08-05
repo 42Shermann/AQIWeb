@@ -1,0 +1,133 @@
+<html>
+
+<head>
+	<title>Air Quality Index</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="icon" href="static/thermometer-quarter-solid.svg" type="image/ico">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+</head>
+<style>
+	#BackgroundNASA {
+
+		background: url(static/nasa.jpg);
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	.footer {
+		background-color: #000000;
+		padding: 10px;
+		text-align: center;
+		color: ffffff
+	}
+
+	.center {
+		margin: auto;
+
+		padding: 10px;
+	}
+</style>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+			aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" href="#">AQI Index</a>
+
+		<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item active">
+					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				</li>
+			</ul>
+			<form method="POST" class="form-inline my-2 my-lg-0 float-right" action="/temperature">
+				<input class="form-control mr-sm-2" placeholder="Search your city here" type="text" name="zip">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form>
+		</div>
+	</nav>
+	<div class="jumbotron">
+		<h1 class="display-4 text-center">Welcome to MFU AQi website.</h1>
+		<p class="lead text-center">Curious about air quality in your city?<br>Find out here!</p>
+		<hr class="my-4">
+
+		<img src="/static/cold.jpg" style='height:300px;padding-left:75px;padding-bottom:10px;padding-top:0px'
+			class="rounded"><img src="/static/code.jpg" style='height:300px;padding-bottom:10px'><img
+			src="/static/night.jpg" style='height:300px;padding-bottom:10px'>
+	</div>
+	<div class="jumbotron">
+		<h1 class="display-4 text-center">What is AQI?</h1>
+		<p class="lead ">The AQI is an index for reporting daily air quality. It tells you how clean or polluted your
+			air is, and what associated health effects might be a concern for you.The AQI focuses on health effects you
+			may experience within a few hours or days after breathing polluted air. EPA calculates the AQI for five
+			major air pollutants regulated by the Clean Air Act: ground-level ozone, particle pollution (also known as
+			particulate matter), carbon monoxide, sulfur dioxide, and nitrogen dioxide. For each of these pollutants,
+			EPA has established national air quality standards to protect public health .Ground-level ozone and airborne
+			particles are the two pollutants that pose the greatest threat to human health in this country.</p>
+		<hr class="my-4">
+	</div>
+	<hr color="black" size="15" />
+	<h2 class="text-center"><i class="fas fa-arrow-down"></i> Search For Your City Here <i
+			class="fas fa-arrow-down"></i></h2>
+	<hr color="black" size="15" />
+	<div style="margin: auto;" class="bg-light">
+		<form method="POST" class="form-inline my-2 my-lg-0 " action="/temperature" style="padding-left:630px;">
+			<input class="form-control mr-sm-2" type="text" name="zip">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
+					class="fas fa-search-location"></i></button>
+		</form>
+	</div>
+
+
+	<hr color="black" size="15" />
+	<h2 class="text-center">Learn More About AQ</h2>
+	<hr color="black" size="15" />
+	<div class="jumbotron">
+		<iframe style="display: block; margin: auto;" width="980" height="550" style="padding-left:600px;"
+			src="https://www.youtube.com/embed/Hx_yWFQvJT4" frameborder="0"
+			allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	</div>
+	<hr color="black" size="15" />
+	<div class="bg-dark">
+		<div class="container text-white">
+			<div class="row">
+				<div class="col">
+					<img src="/static/icon_logo.png" class="rounded " alt="..."
+						style='display: block;padding-top:25px ;width: 40%;'>
+					<figcaption class="figure-caption text-white-90">Mae Fah Luang University</figcaption>
+				</div>
+				<div class="col">
+					<p><br>Powered by :</p>
+					<p><i class="fab fa-python"></i> Python <br><i class="fas fa-flask"></i> Flask<br><i
+							class="fab fa-html5"></i> HTML<br> <i class="fab fa-bootstrap"></i> Bootstrap<br><i
+							class="fab fa-css3-alt"></i> CSS </p>
+				</div>
+				<div class="col">
+					<br>
+					<p>Furthur Reading :</p><a href="https://waqi.info/">World Air Quality Index Project</a><br><br>
+					<a class="btn btn-light" href="/about" role="button">About US</a>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

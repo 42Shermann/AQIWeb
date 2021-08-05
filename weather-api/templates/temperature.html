@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  
+         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		 <link rel="icon" href="static/thermometer-quarter-solid.svg" type="image/ico" >
+		 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="  crossorigin=""></script>
+		 <style>
+				.center {
+				  margin: auto;
+				
+				  padding: 10px;
+				}
+				#BackgroundMap {
+					
+  					background:url(static/Map_London.jpg);
+ 					  background-repeat: no-repeat;
+			      background-size: cover;
+            background-position: right top;
+            background-attachment: fixed;
+            
+				}	  
+				#BackgroundNASA {
+					
+					background:url(static/nasa.jpg);
+					background-repeat: no-repeat;
+					background-size: cover;
+          background-position: right top;
+          background-attachment: fixed;
+				}
+        #BackgroundCar {
+					
+          background:url(/static/City_Car.jpg);
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: right top;
+          background-attachment: fixed;
+        }
+        .footer {
+  	    	background-color: #000000;
+  		    padding: 10px;
+  		    text-align: center;
+			    color: ffffff
+		    }
+				</style>
+    </head>
+    <title>Air Quality Index</title>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="#">AQI Index</a>
+          
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+              </ul>
+              <form method="POST" class="form-inline my-2 my-lg-0 float-right" action="/temperature">
+                <input class="form-control mr-sm-2" placeholder="Search your city here" type="text" name="zip">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+               </form>
+            </div>
+          </nav>
+              
+     
+		
+		
+	           
+     <div id="BackgroundNASA" class="jumbotron p-3 mb-2 bg-gradient-primary text-white text-center " >
+      <h1><i class="fas fa-map-marker-alt"></i> {{aqi_data.data.city.name}} </h1>     
+		  <hr color="white" style='height:5px;width:250px ;'/>	
+		  <h1>  AQI  : {{aqi_data.data.aqi}} </h1> 
+      <p>PM 2.5 : {{aqi_data.data.iaqi.pm25.v}} </p>
+      <p>PM 10 : {{aqi_data.data.iaqi.pm10.v}}<br></span></p>
+      <hr color="white" style='height:5px;width:250px ;'/>	
+		  <p><i class="fas fa-thermometer-quarter"></i> Temperature  : {{aqi_data.data.iaqi.t.v}} ℃</p>
+		  <p><i class="fas fa-tint"></i> Humidity : {{aqi_data.data.iaqi.h.v}} % </p>
+		  <p> <i class="fas fa-calendar-day"></i> Last Updated : {{aqi_data.data.time.s}}</p>
+		 
+        </div>
+    <hr color="black" size="15"/>
+      <h2 class="text-center">Map In Your Area</h2> 
+    <hr color="black" size="15"/>  
+       <div id="BackgroundMap">
+        <div  id='map' class="center rounded" style='height:450px;width:740px ;'  >  
+        <link  rel="stylesheet"  href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css"  />  
+        <script  src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>  
+          
+        <script>  
+              var  OSM_URL  =  'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';  
+              var  OSM_ATTRIB  =  '&copy;  <a  href="http://openstreetmap.org/copyright">OpenStreetMap</a>  contributors';  
+              var  osmLayer  =  L.tileLayer(OSM_URL,  {attribution:  OSM_ATTRIB});  
+          
+              var  WAQI_URL    =  "https://tiles.waqi.info/tiles/usepa-aqi/{z}/{x}/{y}.png?token=562bec4318461b40df147d797a7dad8e87353035";  
+              var  WAQI_ATTR  =  'Air  Quality  Tiles  &copy;  <a  href="http://waqi.info">waqi.info</a>';  
+              var  waqiLayer  =  L.tileLayer(WAQI_URL,  {attribution:  WAQI_ATTR});  
+          
+              var  map  =  L.map('map').setView({{aqi_data.data.city.geo}},  11);  
+              map.addLayer(osmLayer).addLayer(waqiLayer);  
+        </script>
+        </div>
+      </div>
+     
+    <hr color="black" size="5"/>
+    
+    <h2 class="text-center">Air Quality and Pollution Measurement</h2>
+    <hr color="black" size="15"/>
+        <div id="BackgroundCar">
+        <table class="table table-dark center rounded" style='height:450px;width:1200px ; border-style: solid; border-color: black;'>
+                <thead>
+                  <tr>
+                    <th scope="col">AQI</th>
+                    <th scope="col">Air Pollution Level</th>
+                    <th scope="col">Health Implications</th>
+                    <th scope="col">Cautionary Statement (for PM2.5)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background-color:#009966;">
+                    <th scope="row">0 - 50</th>
+                    <td>Good</td>
+                    <td>Air quality is considered satisfactory, and air pollution poses little or no risk</td>
+                    <td>None</td>
+                  </tr>
+                  <tr style="background-color:#ffde33">
+                    <th scope="row">51 -100	</th>
+                    <td>Moderate</td>
+                    <td>Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.</td>
+                    <td>Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.</td>
+                  </tr>
+                  <tr style="background-color:#ff9933;">
+                    <th scope="row">101-150</th>
+                    <td>Unhealthy for Sensitive Groups</td>
+                    <td>Members of sensitive groups may experience health effects. The general public is not likely to be affected.</td>
+                    <td>Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.</td>
+                  </tr>
+                  <tr style="background-color:#cc0033;">
+                        <th scope="row">151-200</th>
+                        <td>Unhealthy </td>
+                        <td>Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects</td>
+                        <td>Active children and adults, and people with respiratory disease, such as asthma, should avoid prolonged outdoor exertion; everyone else, especially children, should limit prolonged outdoor exertion.</td>
+                  </tr>
+                  <tr style="background-color:#660099;" >
+                    <th scope="row">201-300	</th>
+                    <td>Very Unhealthy</td>
+                    <td>Health warnings of emergency conditions. The entire population is more likely to be affected.</td>
+                    <td>Active children and adults, and people with respiratory disease, such as asthma, should avoid all outdoor exertion; everyone else, especially children, should limit outdoor exertion.</td>
+                 </tr>
+                 <tr style="background-color:#7e0023;">
+                        <th scope="row">300+	</th>
+                        <td>Hazardous</td>
+                        <td>Health alert: everyone may experience more serious health effects</td>
+                        <td>Everyone should avoid all outdoor exertion.</td>
+                     </tr> 
+                </tbody>
+              </table>
+        </div>       
+        <hr color="black" size="15"/>
+		    <h2 class="text-center">AIR POLLUTION ACTION DAYS</h2>
+        <hr color="black" size="15"/>
+        <div class="jumbotron">
+        <p class="lead" style="text-indent: 50px;">Ground-level ozone smog (smog) and fine particulate matter (soot) pollution irritate the airways and can cause breathing problems for anyone, but especially for people living with lung disease.</p><p class="lead" style="text-indent: 50px;">The Illinois Environmental Protection Agency (IEPA) monitors air pollution and issues warnings on days when air pollution is expected to rise to levels deemed unhealthy for sensitive groups. When air quality is predicted to be unhealthy for sensitive groups several days in a row, IEPA may announce those days as Air Pollution Action Days.</p>
+        <h4>WHAT SHOULD I DO FOR MY HEALTH ON AIR POLLUTION ACTION DAYS?</h4>
+        <p class="lead" style="text-indent: 50px;">People in sensitive groups – children, the elderly, people who work or spend time outdoors, and those living with lung disease – are encouraged to take precautions on Air Pollution Action Days, including:</p>
+        <ul class="list-unstyled">
+            <ul>
+                <li>Limiting outdoor activity</li>
+                <li>Staying cool and comfortable – preferably in an air-conditioned area</li>
+                <li>Limiting strenuous activity</li>
+                <li>Staying hydrated.</li>
+            </ul>
+          </ul>
+        <p class="lead" style="text-indent: 50px;">It is important for everyone to limit their polluting activities on days with unhealthy air quality. Your choices can help reduce air pollution in your community.</p>       
+        <img src ="/static/adult.jpg" style='height:300px;display: block;margin-left: auto;margin-right: auto;padding-top:10px' class="rounded" >
+        </div>
+        <div class="bg-dark">
+            <div class="container text-white">
+              <div class="row">
+                  <div class="col">
+                      <img src="/static/icon_logo.png" class="rounded " alt="..." style='display: block;padding-top:25px ;width: 40%;'>
+                      <figcaption class="figure-caption text-white-90">Mae Fah Luang University</figcaption>
+                  </div>
+                  <div class="col">
+                      <p><br>Powered by :</p><p><i class="fab fa-python"></i> Python    <br><i class="fas fa-flask"></i> Flask<br><i class="fab fa-html5"></i> HTML<br> <i class="fab fa-bootstrap"></i> Bootstrap<br><i class="fab fa-css3-alt"></i> CSS			</p>
+                  </div>
+                  <div class="col">
+                        <br><p>Furthur Reading :</p><a href="https://waqi.info/">World Air Quality Index Project</a><br><br>
+                        <a class="btn btn-light" href="/about" role="button">About US</a>
+                    
+                  </div>
+                </div>
+              </div>
+              </div>	
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+    </body>
+</html>
