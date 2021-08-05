@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/temperature', methods=['POST'])
 def temperature():
     zipcode = request.form['zip']
-    req = requests.get('https://api.waqi.info/feed/'+zipcode+'/?token=562bec4318461b40df147d797a7dad8e87353035').json()
+    req = requests.get('https://api.waqi.info/feed/'+zipcode+'/?token="Token Here"').json()
     data_req = req
     return render_template("temperature.html", aqi_data=data_req)
 
